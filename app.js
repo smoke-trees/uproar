@@ -31,7 +31,7 @@ app.use((req,res,next)=>{
     res.locals.error_msg=req.flash('error_msg');
     next();
 })
-app.use("/",require("./routes/index"));
+
 app.use('/users',require("./routes/users"));
 const PORT=process.env.PORT || 5000;
 
