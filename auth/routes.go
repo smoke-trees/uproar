@@ -7,6 +7,11 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+type RegisterResponse struct {
+	Status  int8   `json:"status"`
+	Message string `json:"message"`
+}
+
 func LoginHandler(ctx *fasthttp.RequestCtx) {
 	username := string(ctx.FormValue("email"))
 	password := string(ctx.FormValue("password"))
@@ -36,12 +41,12 @@ func LoginHandler(ctx *fasthttp.RequestCtx) {
 		"username": user.Username,
 		"password": user.Password,
 	}}
-	jwt, err1 := claims.HMACSign("SHA256", []byte("smoketrees"))
+	jwToken, err1 := claims.HMACSign("SHA256", []byte("smoketrees"))
 	if err1 != nil {
-		// Add response for no sign
+		authResponse.Status = 5
 		return
 	}
-	authResponse.JWT = jwt
+	authResponse.JWT = jwToken
 
 	js, _ := json.Marshal(&authResponse)
 	ctx.Write(js)
@@ -52,7 +57,12 @@ func RegisterHandler(ctx *fasthttp.RequestCtx) {
 	username := string(ctx.FormValue("username"))
 	password := string(ctx.FormValue("password"))
 	if username == "" || password == "" || email == "" {
-		// Send error
+		rr := RegisterResponse{
+			Status:  1,
+			Message: "all fields not mentioned",
+		}
+		js, _ := json.Marshal(&rr)
+		ctx.Write(js)
 	}
 	user := database.User{
 		Username: username,
@@ -63,7 +73,17 @@ func RegisterHandler(ctx *fasthttp.RequestCtx) {
 
 	if err != nil {
 		// Send error
+		rr := RegisterResponse{
+			Status:  2,
+			Message: err.Error(),
+		}
+		js, _ := json.Marshal(&rr)
+		ctx.Write(js)
 	}
-
-	// Send the Respond
+	rr := RegisterResponse{
+		Status:  0,
+		Message: "success",
+	}
+	js, _ := json.Marshal(&rr)
+	ctx.Write(js)
 }
