@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"github.com/pascaldekloe/jwt"
 	"github.com/smoke-trees/uproar/auth/database"
 	"github.com/valyala/fasthttp"
 )
@@ -9,19 +11,40 @@ func LoginHandler(ctx *fasthttp.RequestCtx) {
 	username := string(ctx.FormValue("email"))
 	password := string(ctx.FormValue("password"))
 	if username == "" || password == "" {
-		// Send error
+		authResponse := database.AuthResponse{
+			Status: database.WrongUsername,
+			JWT:    nil,
+		}
+		js, _ := json.Marshal(&authResponse)
+		ctx.Write(js)
+		return
+
 	}
 	user := database.User{
 		Username: username,
 		Email:    username,
 		Password: password,
 	}
-	_, err := s.Database.Authenticate(user)
+	authResponse, err := s.Database.Authenticate(user)
 	if err != nil {
-		// Send error
+		js, _ := json.Marshal(&authResponse)
+		ctx.Write(js)
+		return
 	}
+	claims := jwt.Claims{Set: map[string]interface{}{
+		"email":    user.Email,
+		"username": user.Username,
+		"password": user.Password,
+	}}
+	jwt, err1 := claims.HMACSign("SHA256", []byte("smoketrees"))
+	if err1 != nil {
+		// Add response for no sign
+		return
+	}
+	authResponse.JWT = jwt
 
-	//Jwt
+	js, _ := json.Marshal(&authResponse)
+	ctx.Write(js)
 }
 
 func RegisterHandler(ctx *fasthttp.RequestCtx) {
