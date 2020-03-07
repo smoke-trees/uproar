@@ -2,7 +2,7 @@ const express=require('express');
 const router=express.Router();
 const bcrypt=require('bcryptjs');
 //User Model
-const User=require('../models/User');
+
 router.get("/login",(req,res)=>res.render("login"));
 router.get("/register",(req,res)=>res.render('register'));
 //Register Handle
