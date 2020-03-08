@@ -10,7 +10,7 @@ from tensorflow.keras.models import load_model
 
 
 def init():
-    model = load_model('toxic_model.h5')
+    model = load_model('/home/rosguy/uproar/model/toxic_model.h5')
     graph = tf.compat.v1.get_default_graph()
     
     return model,graph
