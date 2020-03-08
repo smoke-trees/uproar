@@ -1,8 +1,13 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"github.com/pascaldekloe/jwt"
+	log "github.com/sirupsen/logrus"
 	"github.com/smoke-trees/uproar/forum/forum"
 	"net/http"
 )
@@ -39,6 +44,10 @@ func UserRegisterHandler(writer http.ResponseWriter, request *http.Request, para
 		RelDown:   nil,
 		Posts:     nil,
 	}
+	h := sha256.New()
+	h.Write([]byte(u.UserName))
+	u.UserId = hex.EncodeToString(h.Sum(nil))
+
 	err := s.Database.NewUserRegister(u)
 	var p []byte
 	if err != nil {
@@ -74,15 +83,117 @@ func UserDataHandler(writer http.ResponseWriter, request *http.Request, params h
 
 }
 
-func UserPostDownVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
- panic("implement")
+func PostDownVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	postId := request.FormValue("postId")
+	token := request.FormValue("jwt")
+	check, err := jwt.HMACCheck([]byte(token), []byte("smoketrees"))
+
+	if err != nil {
+		res, _ := json.Marshal(&Response{
+			Status:  StatusFail,
+			Message: err.Error(),
+		})
+		writer.Write(res)
+		return
+	}
+	username := fmt.Sprintf("%v", check.Set["username"])
+
+	user, _ := s.Database.GetUserFromUserName(username)
+	post, _ := s.Database.GetPostFromPostId(postId)
+
+	post.Rel -= user.Cred
+
+	opUser, _ := s.Database.GetUserFromUserId(post.UserId)
+	opUser.Cred -= post.Rel * opUser.Cred / 100
+
+	s.Database.UpdateUserCredibility(opUser)
+	s.Database.UpdatePostAfterAction(post)
 }
 
-func UserPostUpVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func PostUpVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	postId := request.FormValue("postId")
+	token := request.FormValue("jwt")
+	check, err := jwt.HMACCheck([]byte(token), []byte("smoketrees"))
 
-	panic("implement")
+	if err != nil {
+		res, _ := json.Marshal(&Response{
+			Status:  StatusFail,
+			Message: err.Error(),
+		})
+		writer.Write(res)
+		return
+	}
+	username := fmt.Sprintf("%v", check.Set["username"])
+
+	user, _ := s.Database.GetUserFromUserName(username)
+	post, _ := s.Database.GetPostFromPostId(postId)
+
+	post.Rel += user.Cred
+
+	opUser, _ := s.Database.GetUserFromUserId(post.UserId)
+	opUser.Cred += post.Rel * opUser.Cred / 100
+
+	s.Database.UpdateUserCredibility(opUser)
+	s.Database.UpdatePostAfterAction(post)
 }
 
-func UserNewPostHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func NewPostHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	postContent := request.FormValue("postContent")
+	token := request.FormValue("jwt")
+	check, err := jwt.HMACCheck([]byte(token), []byte("smoketrees"))
 
+	if err != nil {
+		res, _ := json.Marshal(&Response{
+			Status:  StatusFail,
+			Message: err.Error(),
+		})
+		writer.Write(res)
+		return
+	}
+	username := fmt.Sprintf("%v", check.Set["username"])
+
+	u, _ := s.Database.GetUserFromUserName(username)
+
+	sha := sha256.New()
+	sha.Write([]byte(postContent))
+
+	post := forum.Post{
+		PostId:      hex.EncodeToString(sha.Sum(nil)),
+		UserId:      u.UserId,
+		PostContent: postContent,
+		PostUp:      0,
+		PostDown:    0,
+		Rel:         u.Cred,
+	}
+	uPost := forum.UserPost{
+		PostId: hex.EncodeToString(sha.Sum(nil)),
+		Rel:    u.Cred,
+	}
+
+	err = s.Database.AddUserPost(uPost, u)
+	if err != nil {
+		log.Warn(err)
+		res, _ := json.Marshal(&Response{
+			Status:  StatusFail,
+			Message: err.Error(),
+		})
+		writer.Write(res)
+		return
+	}
+
+	err = s.Database.NewPost(post)
+	if err != nil {
+		log.Warn(err)
+		res, _ := json.Marshal(&Response{
+			Status:  StatusFail,
+			Message: err.Error(),
+		})
+		writer.Write(res)
+	}
+
+	res, _ := json.Marshal(&Response{
+		Status:  StatusSuccess,
+		Message: SuccessMessage,
+	})
+	writer.Write(res)
 }

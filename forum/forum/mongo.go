@@ -2,8 +2,6 @@ package forum
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,7 +14,93 @@ type ForumMongoClient struct {
 	database string
 }
 
-func (mc *ForumMongoClient) AddPostUpVote(p Post, u User) error {
+func (mc *ForumMongoClient) IsUserAction(u User, p Post) bool {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("user_data")
+
+	filter := bson.D{{"$and",
+		bson.A{bson.D{{"$or", bson.A{bson.D{{"relup.$.postid", p.PostId}},
+			bson.D{{"reldown.$.postid", p.PostId}}}}},
+			bson.D{{"userid", u.UserId}}}}}
+	one := collection.FindOne(context.Background(), filter)
+	if one.Err() != nil {
+		return false
+	}
+	return true
+}
+
+func (mc *ForumMongoClient) GetAllPosts() ([]Post, error) {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("post_data")
+
+	res, _ := collection.Find(context.Background(), nil, )
+	var posts []Post
+	res.All(context.Background(), posts)
+	return posts, nil
+}
+
+func (mc *ForumMongoClient) GetUserFromUserName(username string) (User, error) {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("user_data")
+
+	filter := bson.D{{"username", username}}
+
+	var user User
+
+	one := collection.FindOne(context.Background(), filter)
+	if one.Err() != nil {
+		log.Warn("No forum found for username:", user.UserName)
+		return user, one.Err()
+	}
+
+	err := one.Decode(&user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (mc *ForumMongoClient) GetPostFromPostId(p string) (Post, error) {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("post_data")
+
+	filter := bson.D{{"postid", p}}
+	one := collection.FindOne(context.Background(), filter)
+	if one.Err() != nil {
+		return Post{}, one.Err()
+	}
+
+	var post Post
+	{
+	}
+	err := one.Decode(post)
+	if err != nil {
+		return Post{}, one.Err()
+	}
+	return post, nil
+}
+
+func (mc *ForumMongoClient) UpdatePostAfterAction(p Post) error {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("post_data")
+
+	filter := bson.D{{"postid", p.PostId}}
+	update := bson.D{{"$set", bson.D{{"rel", p.Rel}}}}
+	_, err := collection.UpdateOne(context.Background(), filter, update)
+	return err
+}
+
+func (mc *ForumMongoClient) NewPost(p Post) error {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("post_data")
+
+	_, err := collection.InsertOne(context.Background(), p)
+	return err
+
+}
+
+func (mc *ForumMongoClient) AddPostUpVote(p UserPost, u User) error {
 	mc.RemovePostUpVote(p, u)
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
@@ -29,7 +113,7 @@ func (mc *ForumMongoClient) AddPostUpVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) RemovePostUpVote(p Post, u User) error {
+func (mc *ForumMongoClient) RemovePostUpVote(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 
@@ -41,7 +125,7 @@ func (mc *ForumMongoClient) RemovePostUpVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) AddPostDownVote(p Post, u User) error {
+func (mc *ForumMongoClient) AddPostDownVote(p UserPost, u User) error {
 	mc.RemovePostDownVote(p, u)
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
@@ -54,7 +138,7 @@ func (mc *ForumMongoClient) AddPostDownVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) RemovePostDownVote(p Post, u User) error {
+func (mc *ForumMongoClient) RemovePostDownVote(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 
@@ -66,7 +150,7 @@ func (mc *ForumMongoClient) RemovePostDownVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) AddPost(p Post, u User) error {
+func (mc *ForumMongoClient) AddUserPost(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 
@@ -78,7 +162,7 @@ func (mc *ForumMongoClient) AddPost(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) RemovePost(p Post, u User) error {
+func (mc *ForumMongoClient) RemovePost(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 
@@ -125,10 +209,6 @@ func (mc *ForumMongoClient) NewUserRegister(user User) error {
 		return errors.New("forum already exists")
 	}
 
-	h := sha256.New()
-	h.Write([]byte(user.UserName))
-	user.UserId = hex.EncodeToString(h.Sum(nil))
-
 	_, err := collection.InsertOne(context.Background(), user)
 	if err != nil {
 		return err
@@ -142,7 +222,7 @@ func (mc *ForumMongoClient) UpdateUserCredibility(user User) error {
 	collection := database.Collection("user_data")
 
 	filter := bson.D{{"userid", user.UserId}}
-	update := bson.D{{"_cred", user.Cred}}
+	update := bson.D{{"$set", bson.D{{"cred", user.Cred}}}}
 
 	_, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {

@@ -5,10 +5,12 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
+	"github.com/smoke-trees/golash/function"
 	"github.com/smoke-trees/uproar/forum/forum"
 	"net/http"
 	"os"
 	"os/signal"
+	"time"
 )
 
 type Server struct {
@@ -30,6 +32,11 @@ func main() {
 		log.Fatal("Can't connect to database")
 	}
 	log.Info("Connected to Database")
+
+	// Post Debounce
+	debounced := function.Debounce(GetPosts, 10*time.Second)
+	debounced.Call()
+
 	// Connect to database
 
 	// Router Initialization
@@ -37,9 +44,12 @@ func main() {
 
 	// Routes
 	router.POST("/forum/register", UserRegisterHandler)
-	router.POST("/forum/post/upvote", UserPostUpVoteHandler)
-	router.POST("/forum/post/downvote", UserPostDownVoteHandler)
-	router.GET("/forum/data/user", UserDataHandler)
+	router.POST("/form/post/new", NewPostHandler)
+	router.POST("/forum/post/upvote", PostUpVoteHandler)
+	router.POST("/forum/post/downvote", PostDownVoteHandler)
+	router.GET("/forum/data/user", UserDataHandler) //Get User Data
+
+	router.GET("/forum/feed", GetFeedHandler)
 
 	// CORS
 	handler := cors.Default().Handler(router)
