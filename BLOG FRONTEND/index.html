@@ -3,52 +3,99 @@
   <head>
     <title>Blog Posts</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="card.css">
     <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css"/>
   </head>
-<body style="background-color: #DAE0E6;">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Posts <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Add Posts</a>
-            </li>           
-          </ul>         
-        </div>
-      </nav>
+<body class="theme">
     <div class="container">
         
-        <div class="post">
+      <div class="post">
+        <div class="card">
+          <div class="optional-header">
+            <div class="thumbnail thumbnail--40x40"><img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="" width="40" height="40"></div>
+            <div class="primary-title">
+              <div class="title">Title</div>
+              <div class="subhead">Subhead</div>
+            </div>
+          </div>
+          <div class="primary-title">
+            <div class="primary-text">Primary text goes here</div>
+            <div class="secondary-text">Secondary text</div>
+          </div>
+          <div class="supporting-text">Supporting text include text like an article summary or a restaurant description.</div>
+          <div class="actions">
+            <div class="action-buttons">
+              <button class="button" type="button">Action 1</button>
+              <button class="button" type="button">Action 2</button>
+            </div>
+            <div class="action-icons float-right"> <i class="material-icons action-icon" role="button" title="Share">share</i> <i class="material-icons action-icon" role="button" title="More options">more_vert</i> </div>
+          </div>
+        </div>
+          
+        
+        <div class="card">
+          <div class="optional-header">
+            <div class="thumbnail thumbnail--40x40"><img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="" width="40" height="40"></div>
+            <div class="primary-title">
+              <div class="title">Title</div>
+              <div class="subhead">Subhead</div>
+            </div>
+          </div>
+          <div class="primary-title">
+            <div class="primary-text">Primary text goes here</div>
+            <div class="secondary-text">Secondary text</div>
+          </div>
+          <div class="supporting-text">Supporting text include text like an article summary or a restaurant description.</div>
+          <div class="actions">
+            <div class="action-buttons">
+              <button class="button" type="button">Action 1</button>
+              <button class="button" type="button">Action 2</button>
+            </div>
+            <div class="action-icons float-right"> <i class="material-icons action-icon" role="button" title="Share">share</i> <i class="material-icons action-icon" role="button" title="More options">more_vert</i> </div>
+          </div>
+        
+        
+        </div>
+            
+        <div class="card">
+          <div class="optional-header">
+            <div class="thumbnail thumbnail--40x40"><img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="" width="40" height="40"></div>
+            <div class="primary-title">
+              <div class="title">Title</div>
+              <div class="subhead">Subhead</div>
+            </div>
+          </div>
+          <div class="primary-title">
+            <div class="primary-text">Primary text goes here</div>
+            <div class="secondary-text">Secondary text</div>
+          </div>
+          <div class="supporting-text">Supporting text include text like an article summary or a restaurant description.</div>
+          <div class="actions">
+            <div class="action-buttons">
+              <button class="button" type="button">Action 1</button>
+              <button class="button" type="button">Action 2</button>
+            </div>
+            <div class="action-icons float-right"> <i class="material-icons action-icon" role="button" title="Share">share</i> <i class="material-icons action-icon" role="button" title="More options">more_vert</i> </div>
+          </div>
+        
+        </div>
+      </div>
+      
+      
+      <!-- <div class="post">
             <h1><a href="#">Blog Post one</a></h1>
             <p class="meta">Posted in <a href="#">ABC </a> by Atri on 21-07-2020 </p>
             <img src=""/>
             <a class="more" href="#">Read More</a> 
-        </div>
+        </div> -->
         
     </div>
     
 
-  <script
-  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-  integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-  crossorigin="anonymous"
-></script>
-<script
-  src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-  integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-  crossorigin="anonymous"
-></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"  integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+  crossorigin="anonymous"></script>
+  <script   src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+  crossorigin="anonymous"></script>
 </body>
 </html>
