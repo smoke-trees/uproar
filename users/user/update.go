@@ -1,44 +1,28 @@
 package user
 
-type user struct {
-	userId string
-	password string
-	relUp []post
-	relDown []post
-	cred float64
-	posts []post
-}
-
-type post struct {
-	postId string
-	postUp float64
-	postDown float64
-	rel float64
-}
-
-func updateRelAndUserOnUp(user user,post post) user {
-	user.relUp = append(user.relUp, post)
+func updateRelAndUserOnUp(user User, post Post) User {
+	user.RelUp = append(user.RelUp, post)
 
 	return user
 }
 
-func updateRelAndUserOnDown(user user,post post) user {
-	user.relDown = append(user.relDown, post)
+func updateRelAndUserOnDown(user User, post Post) User {
+	user.RelDown = append(user.RelDown, post)
 
 	return user
 }
 
-func updateCred (user user) user{
-	for _, relUp := range(user.relUp){
-		user.cred += relUp.rel
+func updateCred(user User) User {
+	for _, relUp := range user.RelUp {
+		user.Cred += relUp.Rel
 	}
 
-	for _, relDown := range(user.relDown){
-		user.cred -= relDown.rel
+	for _, relDown := range user.RelDown {
+		user.Cred -= relDown.Rel
 	}
 
-	for _, post := range(user.posts){
-		user.cred += post.rel
+	for _, post := range user.Posts {
+		user.Cred += post.Rel
 	}
 
 	return user
