@@ -16,7 +16,46 @@ type ForumMongoClient struct {
 	database string
 }
 
-func (mc *ForumMongoClient) AddPostUpVote(p Post, u User) error {
+func (mc *ForumMongoClient) GetUserFromUserName(username string) (User, interface{}) {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("user_data")
+
+	filter := bson.D{{"username", username}}
+
+	var user User
+
+	one := collection.FindOne(context.Background(), filter)
+	if one.Err() != nil {
+		log.Warn("No forum found for username:", user.UserId)
+		return user, one.Err()
+	}
+
+	err := one.Decode(&user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (mc *ForumMongoClient) GetPostFromPostId(string) (Post, error) {
+	panic("implement me")
+}
+
+func (mc *ForumMongoClient) UpdatePostAfterAction(Post) error {
+	panic("implement me")
+}
+
+func (mc *ForumMongoClient) NewPost(p Post) error {
+	database := mc.Client.Database(mc.database)
+	collection := database.Collection("post_data")
+
+	_, err := collection.InsertOne(context.Background(), p)
+	return err
+
+}
+
+func (mc *ForumMongoClient) AddPostUpVote(p UserPost, u User) error {
 	mc.RemovePostUpVote(p, u)
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
@@ -29,7 +68,7 @@ func (mc *ForumMongoClient) AddPostUpVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) RemovePostUpVote(p Post, u User) error {
+func (mc *ForumMongoClient) RemovePostUpVote(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 
@@ -41,7 +80,7 @@ func (mc *ForumMongoClient) RemovePostUpVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) AddPostDownVote(p Post, u User) error {
+func (mc *ForumMongoClient) AddPostDownVote(p UserPost, u User) error {
 	mc.RemovePostDownVote(p, u)
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
@@ -54,7 +93,7 @@ func (mc *ForumMongoClient) AddPostDownVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) RemovePostDownVote(p Post, u User) error {
+func (mc *ForumMongoClient) RemovePostDownVote(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 
@@ -66,7 +105,7 @@ func (mc *ForumMongoClient) RemovePostDownVote(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) AddPost(p Post, u User) error {
+func (mc *ForumMongoClient) AddUserPost(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 
@@ -78,7 +117,7 @@ func (mc *ForumMongoClient) AddPost(p Post, u User) error {
 	return nil
 }
 
-func (mc *ForumMongoClient) RemovePost(p Post, u User) error {
+func (mc *ForumMongoClient) RemovePost(p UserPost, u User) error {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("user_data")
 

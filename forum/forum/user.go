@@ -1,7 +1,7 @@
 package forum
 
 type User struct {
-	UserId    string `json:"_id",bson:"_id"`
+	UserId    string `json:"userId",bson:"_id"`
 	Name      string `json:"name",bson:"name"`
 	UserName  string `json:"username",bson:"username"`
 	Phone     string `json:"phone",bson:"phone"`
@@ -12,8 +12,11 @@ type User struct {
 	State     string `json:"State",bson:"state"`
 	UserLevel int8   `json:"level",bson:"user_level"`
 
-	Cred    float64 `json:"cred",bson:"_cred"`
-	RelUp   []Post  `bson:"relUp"`
-	RelDown []Post  `bson:"relDown"`
-	Posts   []Post  `bson:"posts"`
+	Cred    float64    `json:"cred",bson:"_cred"`
+	RelUp   []UserPost `bson:"relUp"`
+	RelDown []UserPost `bson:"relDown"`
+	Posts   []UserPost `bson:"posts"`
 }
+
+
+

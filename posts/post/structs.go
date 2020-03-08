@@ -1,6 +1,6 @@
 package post
 
-type User struct {
+type PostUser struct {
 	UserId string `json:"user_id"`
 	Cred float64 `json:"cred"`
 }

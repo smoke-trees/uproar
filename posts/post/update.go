@@ -1,6 +1,6 @@
 package post
 
-func UpdatePostOnUp(Post Post, User User) Post{
+func UpdatePostOnUp(Post Post, User PostUser) Post{
 	Post.PostUp += User.Cred
 
 	Post.Rel = Post.PostUp - Post.PostDown
@@ -8,7 +8,7 @@ func UpdatePostOnUp(Post Post, User User) Post{
 	return Post
 }
 
-func UpdatePostOnDown(Post Post, User User) Post{
+func UpdatePostOnDown(Post Post, User PostUser) Post{
 	Post.PostDown += User.Cred
 
 	Post.Rel = Post.PostUp - Post.PostDown

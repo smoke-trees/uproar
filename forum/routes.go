@@ -1,8 +1,11 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
+	log "github.com/sirupsen/logrus"
 	"github.com/smoke-trees/uproar/forum/forum"
 	"net/http"
 )
@@ -74,15 +77,60 @@ func UserDataHandler(writer http.ResponseWriter, request *http.Request, params h
 
 }
 
-func UserPostDownVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
- panic("implement")
+func PostDownVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+
 }
 
-func UserPostUpVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func PostUpVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 
-	panic("implement")
 }
 
-func UserNewPostHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func NewPostHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	username := request.FormValue("username")
+	postContent := request.FormValue("postContent")
 
+	u, _ := s.Database.GetUserFromUserName(username)
+
+	sha := sha256.New()
+	sha.Write([]byte(postContent))
+
+	post := forum.Post{
+		PostId:      hex.EncodeToString(sha.Sum(nil)),
+		UserId:      u.UserId,
+		PostContent: postContent,
+		PostUp:      0,
+		PostDown:    0,
+		Rel:         u.Cred,
+	}
+	uPost := forum.UserPost{
+		PostId: hex.EncodeToString(sha.Sum(nil)),
+		Rel:    u.Cred,
+	}
+
+	err := s.Database.AddUserPost(uPost, u)
+	if err != nil {
+		log.Warn(err)
+		res, _ := json.Marshal(&Response{
+			Status:  StatusFail,
+			Message: err.Error(),
+		})
+		writer.Write(res)
+		return
+	}
+
+	err = s.Database.NewPost(post)
+	if err != nil {
+		log.Warn(err)
+		res, _ := json.Marshal(&Response{
+			Status:  StatusFail,
+			Message: err.Error(),
+		})
+		writer.Write(res)
+	}
+
+	res, _ := json.Marshal(&Response{
+		Status:  StatusSuccess,
+		Message: SuccessMessage,
+	})
+	writer.Write(res)
 }

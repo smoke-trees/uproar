@@ -37,9 +37,10 @@ func main() {
 
 	// Routes
 	router.POST("/forum/register", UserRegisterHandler)
-	router.POST("/forum/post/upvote", UserPostUpVoteHandler)
-	router.POST("/forum/post/downvote", UserPostDownVoteHandler)
-	router.GET("/forum/data/user", UserDataHandler)
+	router.POST("/form/post/new",NewPostHandler)
+	router.POST("/forum/post/upvote", PostUpVoteHandler)
+	router.POST("/forum/post/downvote", PostDownVoteHandler)
+	router.GET("/forum/data/user", UserDataHandler) //Get User Data
 
 	// CORS
 	handler := cors.Default().Handler(router)
@@ -61,3 +62,5 @@ func main() {
 
 	// Shutdown Routine
 }
+
+
