@@ -9,7 +9,7 @@ type User struct {
 type AuthResponseStatus int8
 
 const (
-	Success AuthResponseStatus = 0 + iota
+	Success AuthResponseStatus =  iota
 	WrongPassword
 	WrongUsername
 	DBError
@@ -17,7 +17,7 @@ const (
 
 type AuthResponse struct {
 	Status AuthResponseStatus `json:"status"`
-	JWT    []byte             `json:"jwt"`
+	JWT    string             `json:"jwt"`
 }
 
 type Database interface {

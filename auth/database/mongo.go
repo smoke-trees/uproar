@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthMongoClient struct {
@@ -51,7 +52,7 @@ func (mc *AuthMongoClient) AddUser(user User) error {
 // RemoveUser removes a user from the database
 func (mc *AuthMongoClient) RemoveUser(user User) error {
 	database := mc.Client.Database(mc.database)
-	collection := database.Collection("user_details")
+	collection := database.Collection("user_data")
 
 	filter := bson.D{{"$or",
 		bson.A{bson.D{{"username", user.Username}}, bson.D{{"email", user.Email}}}}}
@@ -70,11 +71,11 @@ func (mc *AuthMongoClient) RemoveUser(user User) error {
 func (mc *AuthMongoClient) Authenticate(user User) (AuthResponse, error) {
 	response := AuthResponse{
 		Status: Success,
-		JWT:    nil,
+		JWT:    "",
 	}
 
 	database := mc.Client.Database(mc.database)
-	collection := database.Collection("user_details")
+	collection := database.Collection("user_data")
 
 	filter := bson.D{{"$or",
 		bson.A{bson.D{{"username", user.Username}}, bson.D{{"email", user.Email}}}}}
@@ -92,12 +93,15 @@ func (mc *AuthMongoClient) Authenticate(user User) (AuthResponse, error) {
 	if err != nil {
 		response.Status = DBError
 		log.Errorf("Couldn't parse data for following user:%v", user)
-		return response, nil
+		return response, err
 	}
 
-	if user.Password != readUser.Password {
+	err = bcrypt.CompareHashAndPassword([]byte(readUser.Password), []byte(user.Password))
+	if err != nil {
 		response.Status = WrongPassword
+		return response, errors.New("Wrong Password")
 	}
+
 	return response, nil
 }
 
