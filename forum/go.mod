@@ -1,4 +1,4 @@
-module github.com/smoke-trees/uproar/users
+module github.com/smoke-trees/uproar/forum
 
 go 1.13
 

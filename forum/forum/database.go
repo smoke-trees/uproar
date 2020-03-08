@@ -1,4 +1,4 @@
-package user
+package forum
 
 type Database interface {
 	GetUserFromUserId(string) (User, error)

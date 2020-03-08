@@ -1,4 +1,4 @@
-package user
+package forum
 
 type Post struct {
 	PostId   string  `json:"post_id",bson:"_id"`

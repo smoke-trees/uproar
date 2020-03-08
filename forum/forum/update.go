@@ -1,4 +1,4 @@
-package user
+package forum
 
 func updateRelAndUserOnUp(user User, post Post) User {
 	user.RelUp = append(user.RelUp, post)
