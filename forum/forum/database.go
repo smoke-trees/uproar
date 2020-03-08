@@ -12,5 +12,7 @@ type Database interface {
 	UpdatePostAfterAction(Post) error
 	NewPost(Post) error
 	Disconnect()
-	GetUserFromUserName(username string) (User, interface{})
+	GetUserFromUserName(username string) (User, error)
+	GetAllPosts() ([]Post, error)
+	IsUserAction(User, Post) bool
 }

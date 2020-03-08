@@ -56,6 +56,7 @@ github.com/lab259/cors v0.2.0/go.mod h1:irvlJlQvQX/3L0ouMuvV4XNMSKP7a1+45aexLgqn
 github.com/markbates/oncer v0.0.0-20181203154359-bf2de49a0be2/go.mod h1:Ld9puTsIW75CHf65OeIOkyKbteujpZVXDpWK6YGZbxE=
 github.com/markbates/safe v1.0.1/go.mod h1:nAqgmRi7cY2nqMc92/bSEeQA+R4OheNU2T1kNSCBdG0=
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
+github.com/pascaldekloe/jwt v1.7.0 h1:0vNebf7Whqyv8yrly+BSm4B4Y0aAprLTACaX5eLBng8=
 github.com/pascaldekloe/jwt v1.7.0/go.mod h1:TKhllgThT7TOP5rGr2zMLKEDZRAgJfBbtKyVeRsNB9A=
 github.com/pelletier/go-toml v1.4.0/go.mod h1:PN7xzY2wHTK0K9p34ErDQMlFxa51Fk0OUruD3k1mMwo=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
@@ -71,6 +72,8 @@ github.com/sirupsen/logrus v1.4.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPx
 github.com/sirupsen/logrus v1.4.1/go.mod h1:ni0Sbl8bgC9z8RoU9G6nDWqqs/fq4eDPysMBDgk/93Q=
 github.com/sirupsen/logrus v1.4.2 h1:SPIRibHv4MatM3XXNO2BJeFLZwZ2LvZgfQ5+UNI2im4=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
+github.com/smoke-trees/golash v0.0.0-20191019170324-0895e8b1cf92 h1:K4Wx9UbuRT5w1UFh480s+0K7KIxqJmWlLrl1ovIguik=
+github.com/smoke-trees/golash v0.0.0-20191019170324-0895e8b1cf92/go.mod h1:ZDf0nUzVR4hzinTAKyQRbF0sFlFhphY8OjYOugGb7V0=
 github.com/smoke-trees/uproar v0.0.0-20200308091759-4b511c8cdd2c h1:1Jy0ZO8puErxLmwYDQ82D+zXXuIWjBkDWEzRnMCzHmU=
 github.com/smoke-trees/uproar/auth v0.0.0-20200308091759-4b511c8cdd2c h1:7hEx6XboMKhGMhMMWUZqdIuBBK408WiXgL8F+Bk2fIE=
 github.com/smoke-trees/uproar/auth v0.0.0-20200308091759-4b511c8cdd2c/go.mod h1:kyIo0ZBDtZvOTALl2+GzaCYRibdI0mC5PSbT35E4FUU=

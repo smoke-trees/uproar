@@ -12,12 +12,16 @@ github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
 # github.com/konsorten/go-windows-terminal-sequences v1.0.2
 github.com/konsorten/go-windows-terminal-sequences
+# github.com/pascaldekloe/jwt v1.7.0
+github.com/pascaldekloe/jwt
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
 # github.com/rs/cors v1.7.0
 github.com/rs/cors
 # github.com/sirupsen/logrus v1.4.2
 github.com/sirupsen/logrus
+# github.com/smoke-trees/golash v0.0.0-20191019170324-0895e8b1cf92
+github.com/smoke-trees/golash/function
 # github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c
 github.com/xdg/scram
 # github.com/xdg/stringprep v0.0.0-20180714160509-73f8eece6fdc

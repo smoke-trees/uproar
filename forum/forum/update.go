@@ -1,18 +1,18 @@
 package forum
 
-func updateRelAndUserOnUp(user User, post UserPost) User {
+func UpdateRelAndUserOnUp(user User, post UserPost) User {
 	user.RelUp = append(user.RelUp, post)
 
 	return user
 }
 
-func updateRelAndUserOnDown(user User, post UserPost) User {
+func UpdateRelAndUserOnDown(user User, post UserPost) User {
 	user.RelDown = append(user.RelDown, post)
 
 	return user
 }
 
-func updateCred(user User) User {
+func UpdateCred(user User) User {
 	for _, relUp := range user.RelUp {
 		user.Cred += relUp.Rel
 	}
