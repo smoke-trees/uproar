@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Posts</title>
+    <link rel="stylesheet" href="http://localhost:5000/public/styles/style.css">
+    <link rel="stylesheet" href="http://localhost:5000/public/styles/card.css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css"/>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://localhost:5000/public/scripts/like-dislike.js"></script>
+</head>
+<body class="theme">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="font-family: 'Quicksand', sans-serif;">
+    <a class="navbar-brand" href="#">UpRoar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto" style="margin-left: 25%;">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:5000/post/new">Add Post</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+<div class="container" style="background-color: hsl(206, 35%, 13%);color: white;border-radius: 5px; ">
+
+
+    <h1 style="font-family: 'Quicksand', sans-serif;">The Government Report for the CORONA Virus</h1>
+    <h2 style="font-family: 'Quicksand', sans-serif;">Novel Corona Virus</h2>
+    <h4 style="font-family: 'Quicksand', sans-serif;">The Helpline Number for corona-virus : +91-11-23978046</h4>
+    <h4 style="font-family: 'Quicksand', sans-serif;">The Helpline Email ID for corona-virus : ncov2019@gmail.com</h4>
+    <ol style="font-size: medium;font-family: 'Quicksand', sans-serif;">
+        <li>Total number of passengers screened at airport : 7,26,122</li>
+        <li>Total number of Confirmed COVID 2019 cases across India : 34</li>
+    </ol>
+    <h3 style="font-family: 'Quicksand', sans-serif;">State/UT wise list of COVID confirmed cases:</h3>
+    <table class="table table-bordered" style=" color: white;">
+        <thead>
+        <tr>
+            <th scope="col">SNo.</th>
+            <th scope="col">Name of State / UT</th>
+            <th scope="col">Total Confirmed cases (Indian National)</th>
+            <th scope="col">Total Confirmed cases ( Foreign national )</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Delhi</td>
+            <td>3</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Haryana</td>
+            <td>0</td>
+            <td>14</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Kerala</td>
+            <td>3</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <th scope="row">4</th>
+            <td>Rajasthan</td>
+            <td>0</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th scope="row">5</th>
+            <td>Telangana</td>
+            <td>1</td>
+            <td>0</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="container" style="background-color: hsl(206, 35%, 13%);color: white;border-radius: 5px; ">
+
+    <h1 style="font-family: 'Quicksand', sans-serif;">Delhi Police arrest 24 people for rumour-mongering after
+        violence </h1>
+    <p style="font-size: 1.5em"><b>Delhi was on the edge once again after rumours of communal tension/attacks spread on
+            Sunday evening.According to the police, panic calls were received from several areas of Delhi on Sunday.
+            This comes in the aftermath of the violence that erupted in north-east Delhi last week, in which at least 47
+            people died and around 200 sustained injuries.</b></p>
+</div>
+<div class="container">
+
+    <% json.forEach(function(j) { %>
+        <% if(j.PostId != ''){ %>
+            <div class="post">
+                <div class="card" style="background-color: white">
+                    <div class="optional-header">
+                        <div class="thumbnail thumbnail--40x40"><img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+                                    alt=""
+                                    width="40" height="40"></div>
+                        <div class="primary-title">
+                            <div class="title"><%= j.OpUsername %> </div>
+                        </div>
+                    </div>
+                    <div class="supporting-text" style="font-size: medium;">
+                        <%= j.PostContent %>
+                    </div>
+                    <% if(user != j.OpUsername && !j.UserAction){ %>
+                        <div class="actions">
+                            <div id="<%= j.post_id %>">
+                                <button id="upvote-<%= j.PostId %>">UpVote
+                                </button>
+                                <button id="downvote-<%= j.PostId %>">DownVote
+                                </button>
+                            </div>
+                            <script>
+                                $("#upvote-<%= j.PostId %>").click(function () {
+                                    let data = {jwt: "<%= jwt %>", postId: "<%= j.PostId %>"}
+                                    let ajax = $.ajax({
+                                        url: "http://localhost:3000/forum/post/upvote",
+                                        method: "POST",
+                                        data: data,
+                                    })
+                                    ajax.done(function (msg) {
+                                        console.log(msg)
+                                        location.reload()
+                                    })
+                                    ajax.fail(function (msg) {
+                                        console.log(msg)
+                                    })
+                                })
+                                $("#downvote-<%= j.PostId %>").click(function () {
+                                    console.log("click")
+                                    let data = {jwt: "<%= jwt %>", postId: "<%= j.PostId %>"}
+                                    let ajax = $.ajax({
+                                        url: "http://localhost:3000/forum/post/downvote",
+                                        method: "POST",
+                                        data: data,
+                                    })
+                                    ajax.done(function (msg) {
+                                        console.log(msg)
+                                        location.reload()
+                                    })
+                                    ajax.fail(function (msg) {
+                                        console.log(msg)
+                                    })
+                                })
+
+                            </script>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+    <% }); %>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

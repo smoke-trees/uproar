@@ -1,28 +1,32 @@
-const express=require('express');
-const expressLayouts=require('express-ejs-layouts');
-const mongoose=require('mongoose');
-const flash=require('connect-flash');
-const session=require('express-session');
-const app=express();
-app.use(expressLayouts);
-app.set("view engine","ejs");
+const express = require('express');
+const router = require('./routes/router')
+const path = require('path');
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
+
+const app = express();
+
+function authmiddleware(req, res, next) {
+    token = req.cookies.jwt
+    try {
+        claims = jwt.verify(token, "smoketrees", {algorithm: "HS256"})
+
+    } catch (err) {
+        res.redirect("/login")
+    }
+
+    next()
+}
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: false}));
-//Express Session
-app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: true
-}));
-//Flash
-app.use(flash());
+app.use(cookieParser());
+app.use("/public", express.static(__dirname + "/public"));
+
 //Global vars
-app.use((req,res,next)=>{
-    res.locals.success_msg=req.flash('success_msg');
-    res.locals.error_msg=req.flash('error_msg');
-    next();
-})
 
-app.use('/users',require("./routes/users"));
-const PORT=process.env.PORT || 5000;
+app.use('/', router);
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT,console.log('Server started'));
+app.listen(PORT, console.log('Server started'));
