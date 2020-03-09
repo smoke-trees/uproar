@@ -105,9 +105,15 @@ func PostDownVoteHandler(writer http.ResponseWriter, request *http.Request, para
 
 	opUser, _ := s.Database.GetUserFromUserId(post.UserId)
 	opUser.Cred -= post.Rel * opUser.Cred / 100
-
+	userPost := forum.UserPost{
+		PostId:   post.PostId,
+		PostUp:   0,
+		PostDown: 0,
+		Rel:      post.Rel,
+	}
 	s.Database.UpdateUserCredibility(opUser)
 	s.Database.UpdatePostAfterAction(post)
+	s.Database.AddPostDownVote(userPost, user)
 }
 
 func PostUpVoteHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
@@ -135,6 +141,13 @@ func PostUpVoteHandler(writer http.ResponseWriter, request *http.Request, params
 
 	s.Database.UpdateUserCredibility(opUser)
 	s.Database.UpdatePostAfterAction(post)
+	userPost := forum.UserPost{
+		PostId:   post.PostId,
+		PostUp:   0,
+		PostDown: 0,
+		Rel:      post.Rel,
+	}
+	s.Database.AddPostUpVote(userPost, user)
 }
 
 func NewPostHandler(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
