@@ -22,7 +22,7 @@ func main() {
 	// Read Port from the environment
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "3001"
 	}
 
 	// Connect to database
@@ -37,8 +37,8 @@ func main() {
 	router := fasthttprouter.New()
 
 	// Routes
-	router.POST("/api/register", RegisterHandler)
-	router.POST("/api/login", LoginHandler)
+	router.POST("/register", RegisterHandler)
+	router.POST("/login", LoginHandler)
 
 	// CORS
 	handler := cors.Default().Handler(router.Handler)

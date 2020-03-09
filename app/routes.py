@@ -22,12 +22,14 @@ def index():
 def calc():
 	inp = request.form["inp"]
 	nlp = spacy.load('en_core_web_sm')
-		
-	out = nlp(inp)
+	place_model = spacy.load("/home/rosguy/uproar/model/model")
+	out_1 = nlp(inp)
+	out_2 = place_model(inp)
 	ls = {}
-	for ents in out.ents:
+	#for ents in out_1.ents:
+	#	ls[ents.text] = ents.label_
+	for ents in out_2.ents:
 		ls[ents.text] = ents.label_
-
 	return render_template('ner_inp.html',data=ls)
 
 
@@ -39,6 +41,7 @@ def display():
 def toxic():
 	model = load_model('/home/rosguy/uproar/model/toxic_model.h5')
 	inp = request.form["sentence"]
+	
 	sentence = preprocessing(make_sentence(inp))
 	list_classes = ["Toxic", "Severely Toxic", "Obscene", "Threat", "Insult", "Identity Hate"]     
 	pred = str(dict(zip(list_classes, 100*model.predict(sentence).flatten())))
