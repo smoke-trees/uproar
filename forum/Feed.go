@@ -18,6 +18,7 @@ type PostElement struct {
 	PostId      string
 	PostContent string
 	UserAction  bool
+	OpUsername  string
 }
 
 var Posts forum.Posts
@@ -46,8 +47,10 @@ func GetFeedHandler(writer http.ResponseWriter, request *http.Request, _ httprou
 		data[i].PostId = post.PostId
 		data[i].PostContent = post.PostContent
 		data[i].UserAction = s.Database.IsUserAction(user, post)
+		op, _ := s.Database.GetUserFromUserId(post.UserId)
+		data[i].OpUsername = op.UserName
 	}
 
-	js, _ := json.Marshal(Posts)
+	js, _ := json.Marshal(data)
 	writer.Write(js)
 }

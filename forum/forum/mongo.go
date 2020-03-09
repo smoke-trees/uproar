@@ -19,8 +19,8 @@ func (mc *ForumMongoClient) IsUserAction(u User, p Post) bool {
 	collection := database.Collection("user_data")
 
 	filter := bson.D{{"$and",
-		bson.A{bson.D{{"$or", bson.A{bson.D{{"relup.$.postid", p.PostId}},
-			bson.D{{"reldown.$.postid", p.PostId}}}}},
+		bson.A{bson.D{{"$or", bson.A{bson.D{{"relUp.postid", p.PostId}},
+			bson.D{{"relDown.postid", p.PostId}}}}},
 			bson.D{{"userid", u.UserId}}}}}
 	one := collection.FindOne(context.Background(), filter)
 	if one.Err() != nil {
@@ -33,9 +33,12 @@ func (mc *ForumMongoClient) GetAllPosts() ([]Post, error) {
 	database := mc.Client.Database(mc.database)
 	collection := database.Collection("post_data")
 
-	res, _ := collection.Find(context.Background(), nil, )
+	res, err := collection.Find(context.Background(), bson.D{{}}, )
+	if err != nil {
+		log.Error(err)
+	}
 	var posts []Post
-	res.All(context.Background(), posts)
+	err = res.All(context.Background(), &posts)
 	return posts, nil
 }
 
@@ -49,7 +52,7 @@ func (mc *ForumMongoClient) GetUserFromUserName(username string) (User, error) {
 
 	one := collection.FindOne(context.Background(), filter)
 	if one.Err() != nil {
-		log.Warn("No forum found for username:", user.UserName)
+		log.Warn("No forum found for username:", username)
 		return user, one.Err()
 	}
 
@@ -72,9 +75,8 @@ func (mc *ForumMongoClient) GetPostFromPostId(p string) (Post, error) {
 	}
 
 	var post Post
-	{
-	}
-	err := one.Decode(post)
+
+	err := one.Decode(&post)
 	if err != nil {
 		return Post{}, one.Err()
 	}
@@ -208,6 +210,9 @@ func (mc *ForumMongoClient) NewUserRegister(user User) error {
 		log.Error("User already exist")
 		return errors.New("forum already exists")
 	}
+	user.RelUp = []UserPost{}
+	user.RelDown = []UserPost{}
+	user.Posts = []UserPost{}
 
 	_, err := collection.InsertOne(context.Background(), user)
 	if err != nil {
