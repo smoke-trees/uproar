@@ -96,7 +96,7 @@ func PostDownVoteHandler(writer http.ResponseWriter, request *http.Request, para
 		writer.Write(res)
 		return
 	}
-	username := fmt.Sprintf("%v", check.Set["username"])
+	username := check.String("username")
 
 	user, _ := s.Database.GetUserFromUserName(username)
 	post, _ := s.Database.GetPostFromPostId(postId)
@@ -130,7 +130,7 @@ func PostUpVoteHandler(writer http.ResponseWriter, request *http.Request, params
 		return
 	}
 	username := fmt.Sprintf("%v", check.Set["username"])
-
+	
 	user, _ := s.Database.GetUserFromUserName(username)
 	post, _ := s.Database.GetPostFromPostId(postId)
 
