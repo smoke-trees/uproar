@@ -1,15 +1,18 @@
+# github.com/andybalholm/brotli v1.0.4
+github.com/andybalholm/brotli
 # github.com/buaazp/fasthttprouter v0.1.1
 github.com/buaazp/fasthttprouter
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
 # github.com/golang/snappy v0.0.1
 github.com/golang/snappy
-# github.com/klauspost/compress v1.9.5
+# github.com/klauspost/compress v1.15.0
+github.com/klauspost/compress
 github.com/klauspost/compress/flate
 github.com/klauspost/compress/fse
 github.com/klauspost/compress/gzip
 github.com/klauspost/compress/huff0
-github.com/klauspost/compress/snappy
+github.com/klauspost/compress/internal/snapref
 github.com/klauspost/compress/zlib
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
@@ -25,7 +28,7 @@ github.com/pkg/errors
 github.com/sirupsen/logrus
 # github.com/valyala/bytebufferpool v1.0.0
 github.com/valyala/bytebufferpool
-# github.com/valyala/fasthttp v1.9.0
+# github.com/valyala/fasthttp v1.34.0
 github.com/valyala/fasthttp
 github.com/valyala/fasthttp/fasthttputil
 github.com/valyala/fasthttp/stackless
@@ -65,14 +68,15 @@ go.mongodb.org/mongo-driver/x/mongo/driver/session
 go.mongodb.org/mongo-driver/x/mongo/driver/topology
 go.mongodb.org/mongo-driver/x/mongo/driver/uuid
 go.mongodb.org/mongo-driver/x/mongo/driver/wiremessage
-# golang.org/x/crypto v0.0.0-20190530122614-20be4c3c3ed5
+# golang.org/x/crypto v0.0.0-20220214200702-86341886e292
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/pbkdf2
 # golang.org/x/sync v0.0.0-20190423024810-112230192c58
 golang.org/x/sync/semaphore
-# golang.org/x/sys v0.0.0-20190531175056-4c3a928424d2
+# golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.2
+# golang.org/x/text v0.3.7
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
